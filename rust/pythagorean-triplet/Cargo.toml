@@ -1,0 +1,7 @@
+[dependencies]
+rayon = "1.0"
+
+[package]
+edition = "2018"
+name = "pythagorean_triplet"
+version = "1.0.0"
