@@ -1,7 +1,8 @@
 use rayon::prelude::*;
 use std::collections::HashSet;
 
-fn is_pythagorean_triplet([a, b, c]: &[u32; 3]) -> bool {
+fn is_pythagorean_triplet(triplet: &[u32; 3]) -> bool {
+    let [a, b, c] = triplet;
     a.pow(2) + b.pow(2) == c.pow(2) && a < b && b < c
 }
 
@@ -13,7 +14,7 @@ fn is_pythagorean_triplet([a, b, c]: &[u32; 3]) -> bool {
 // => ...
 // => b = (sum * (sum - (2 * a))) / (2 * (sum - a))
 pub fn find(sum: u32) -> HashSet<[u32; 3]> {
-    (1 .. (sum/3 + 1))
+    (1..(sum / 3 + 1))
         .into_par_iter()
         .filter_map(|a| {
             // Given a and sum, we can calculate b and c
@@ -21,6 +22,7 @@ pub fn find(sum: u32) -> HashSet<[u32; 3]> {
             let denominator = 2 * (sum - a);
             let b = numerator / denominator;
             let c = sum - a - b;
+
             let triplet = [a, b, c];
 
             if is_pythagorean_triplet(&triplet) {
