@@ -1,29 +1,25 @@
 module Bob (responseFor) where
 
-import Data.Char (isUpper, isSpace, isLetter)
-import Data.List (dropWhileEnd)
+import Data.Char (isLower, isUpper, isSpace)
+import Data.List (isSuffixOf)
 
-trim :: String -> String
-trim xs = dropWhile isSpace (dropWhileEnd isSpace xs)
+removeSpaces :: String -> String
+removeSpaces = filter (not . isSpace)
 
 isShouting :: String -> Bool
-isShouting xs = all (\x -> isUpper x || not (isLetter x)) xs && any isUpper xs
+isShouting xs = all (not . isLower) xs && any isUpper xs
 
 isQuestion :: String -> Bool
-isQuestion xs = last xs == '?'
+isQuestion = ("?" `isSuffixOf`) 
 
 isShoutingAQuestion :: String -> Bool
 isShoutingAQuestion xs = isShouting xs && isQuestion xs
 
-isOnlyWhitespace :: String -> Bool
-isOnlyWhitespace xs = all isSpace xs
-
 responseFor :: String -> String
-responseFor [] = "Fine. Be that way!"
 responseFor xs
-    | isOnlyWhitespace xs = "Fine. Be that way!"
-    | isShoutingAQuestion trimmedXs = "Calm down, I know what I'm doing!"
-    | isShouting trimmedXs = "Whoa, chill out!"
-    | isQuestion trimmedXs = "Sure."
+    | null noSpacesXs = "Fine. Be that way!"
+    | isShoutingAQuestion noSpacesXs = "Calm down, I know what I'm doing!"
+    | isShouting noSpacesXs = "Whoa, chill out!"
+    | isQuestion noSpacesXs = "Sure."
     | otherwise = "Whatever."
-    where trimmedXs = trim xs
+    where noSpacesXs = removeSpaces xs
